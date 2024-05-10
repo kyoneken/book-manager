@@ -12,6 +12,11 @@ data class Author(
     val email: Email
 )
 
+data class NewAuthor(
+    val name: AuthorName,
+    val email: Email
+)
+
 /**
  * 著者ID
  * @property value ID

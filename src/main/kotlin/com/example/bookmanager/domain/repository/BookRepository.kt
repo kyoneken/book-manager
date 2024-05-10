@@ -4,9 +4,8 @@ import com.example.bookmanager.domain.model.AuthorId
 import com.example.bookmanager.domain.model.Book
 import com.example.bookmanager.domain.model.BookId
 import com.example.bookmanager.domain.model.BookTitle
-import com.example.bookmanager.domain.model.ISBN
 import com.example.bookmanager.domain.model.NewBook
-import java.time.LocalDate
+import com.example.bookmanager.domain.model.UpdateBook
 
 interface BookRepository {
 
@@ -34,14 +33,14 @@ interface BookRepository {
 
     /**
      * 書籍の属性情報を更新する
-     * @param id 更新する書籍のID
-     * @param title 書籍のタイトル
-     * @param isbn 書籍のISBN
-     * @param publishedDate 書籍の出版日
-     * @param authorId 書籍の著者ID
+     * @param updateBook 更新する書籍の属性情報
+     * @return Int 更新した書籍の件数
+     * @throws IllegalArgumentException If the ISBN already exists.
+     * @throws IllegalArgumentException If the author does not exist.
+     * @throws IllegalStateException If the update count is unexpected.
      * @throws IllegalArgumentException If the book does not exist.
      */
-    fun updateById(id: BookId, title: BookTitle?, isbn: ISBN?, publishedDate: LocalDate?, authorId: AuthorId?): Int
+    fun update(updateBook: UpdateBook): Int
 
     /**
      * 書籍を削除する
@@ -49,5 +48,5 @@ interface BookRepository {
      * @throws IllegalArgumentException If the book does not exist.
      * @return Int 削除した書籍の件数
      * */
-    fun deleteById(id: BookId): Int
+    fun delete(deleteBook: Book): Int
 }

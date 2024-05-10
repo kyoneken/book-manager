@@ -1,6 +1,6 @@
 package com.example.bookmanager.application.usecase
 
-import com.example.bookmanager.domain.model.Book
+import com.example.bookmanager.domain.model.BookId
 import java.time.LocalDate
 
 /**
@@ -16,5 +16,5 @@ interface RegisterBookUseCase {
      * @param authorId 著者ID
      * @return 登録した書籍
      */
-    fun handle(title: String, isbn: String, publishedDate: LocalDate, authorId: Long): Book
+    fun handle(title: String, isbn: String, publishedDate: LocalDate, authorId: Long): BookId
 }

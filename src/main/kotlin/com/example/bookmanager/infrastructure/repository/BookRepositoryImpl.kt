@@ -1,5 +1,6 @@
 package com.example.bookmanager.infrastructure.repository
 
+import com.example.bookmanager.domain.constraint.UniqueConstraintCheck
 import com.example.bookmanager.domain.model.Author
 import com.example.bookmanager.domain.model.AuthorId
 import com.example.bookmanager.domain.model.AuthorName
@@ -9,17 +10,17 @@ import com.example.bookmanager.domain.model.BookTitle
 import com.example.bookmanager.domain.model.Email
 import com.example.bookmanager.domain.model.ISBN
 import com.example.bookmanager.domain.model.NewBook
+import com.example.bookmanager.domain.model.UpdateBook
 import com.example.bookmanager.domain.repository.BookRepository
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import com.example.bookmanager.generated.jooq.tables.Author as JooqTablesAuthor
 import com.example.bookmanager.generated.jooq.tables.Book as JooqTablesBook
 
 @Repository
 class BookRepositoryImpl(
     private val dslContext: DSLContext
-) : BookRepository {
+) : BookRepository, UniqueConstraintCheck<ISBN> {
 
     override fun findById(id: BookId): Book? {
         val author = JooqTablesAuthor.AUTHOR
@@ -86,30 +87,35 @@ class BookRepositoryImpl(
             } ?: throw IllegalArgumentException("書籍の登録に失敗しました")
     }
 
-    override fun updateById(id: BookId, title: BookTitle?, isbn: ISBN?, publishedDate: LocalDate?, authorId: AuthorId?): Int {
+    override fun exists(column: ISBN): Boolean {
+        val book = JooqTablesBook.BOOK
+        return dslContext.fetchExists(book, book.ISBN.eq(column.value))
+    }
+
+    override fun update(updateBook: UpdateBook): Int {
         val book = JooqTablesBook.BOOK
         val updateQuery = dslContext.update(book)
-            .set(book.ID, id.value)
-        title?.let {
-            updateQuery.set(book.TITLE, title.value)
+            .set(book.ID, updateBook.id.value)
+        updateBook.title?.let {
+            updateQuery.set(book.TITLE, it.value)
         }
-        isbn?.let {
-            updateQuery.set(book.ISBN, isbn.value)
+        updateBook.isbn?.let {
+            updateQuery.set(book.ISBN, it.value)
         }
-        publishedDate?.let {
-            updateQuery.set(book.PUBLISHED_DATE, publishedDate)
+        updateBook.publishedDate?.let {
+            updateQuery.set(book.PUBLISHED_DATE, it)
         }
-        authorId?.let {
-            updateQuery.set(book.AUTHOR_ID, authorId.value)
+        updateBook.authorId?.let {
+            updateQuery.set(book.AUTHOR_ID, it.value)
         }
-        updateQuery.where(book.ID.eq(id.value))
+        updateQuery.where(book.ID.eq(updateBook.id.value))
         return updateQuery.execute()
     }
 
-    override fun deleteById(id: BookId): Int {
+    override fun delete(deleteBook: Book): Int {
         val book = JooqTablesBook.BOOK
         return dslContext.deleteFrom(book)
-            .where(book.ID.eq(id.value))
+            .where(book.ID.eq(deleteBook.id.value))
             .execute()
     }
 }

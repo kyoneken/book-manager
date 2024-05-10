@@ -18,11 +18,34 @@ data class Book(
     val author: Author
 )
 
+/**
+ * 新規書籍情報
+ * @property title タイトル
+ * @property isbn ISBN
+ * @property publishedDate 出版日
+ * @property authorId 著者ID
+ */
 data class NewBook(
     val title: BookTitle,
     val isbn: ISBN,
     val publishedDate: LocalDate,
     val authorId: AuthorId
+)
+
+/**
+ * 書籍更新情報
+ * @property id ID
+ * @property title タイトル
+ * @property isbn ISBN
+ * @property publishedDate 出版日
+ * @property authorId 著者ID
+ */
+data class UpdateBook(
+    val id: BookId,
+    val title: BookTitle?,
+    val isbn: ISBN?,
+    val publishedDate: LocalDate?,
+    val authorId: AuthorId?
 )
 
 /**

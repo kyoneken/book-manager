@@ -3,6 +3,7 @@ package com.example.bookmanager.application.interactor
 import com.example.bookmanager.application.usecase.RemoveBookUseCase
 import com.example.bookmanager.domain.model.BookId
 import com.example.bookmanager.domain.repository.BookRepository
+import com.example.bookmanager.exception.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,12 +14,11 @@ class RemoveBookUsecaseImpl(
 
     @Transactional
     override fun handle(id: Long): Result<Unit> {
-        when (bookRepository.deleteById(BookId.create(id))) {
+        val bookId = BookId.create(id)
+        val book = bookRepository.findById(bookId) ?: return Result.failure(Exception("Book not found: $id"))
+        when (bookRepository.delete(book)) {
             0 -> {
-                // TODO: ロガーを使ってwarnログを出力する
-                val message = "Book not found: $id"
-                println(message)
-                return Result.failure(IllegalArgumentException(message))
+                throw NotFoundException("Book not found: $id")
             }
             1 -> {
                 return Result.success(Unit)

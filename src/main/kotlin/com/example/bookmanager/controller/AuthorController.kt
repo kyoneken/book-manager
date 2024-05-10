@@ -2,10 +2,16 @@ package com.example.bookmanager.controller
 
 import com.example.bookmanager.application.usecase.FindAuthorUseCase
 import com.example.bookmanager.application.usecase.ListAuthorUseCase
+import com.example.bookmanager.application.usecase.RegisterAuthorUseCase
+import com.example.bookmanager.controller.request.RegisterAuthorRequest
 import com.example.bookmanager.controller.response.AuthorResponse
+import com.example.bookmanager.controller.response.RegisterBookResponse
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -16,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("author")
 class AuthorController(
     private val listAuthorUseCase: ListAuthorUseCase,
-    private val findAuthorUseCase: FindAuthorUseCase
+    private val findAuthorUseCase: FindAuthorUseCase,
+    private val registerAuthorUseCase: RegisterAuthorUseCase
 ) {
 
     /**
@@ -54,5 +61,22 @@ class AuthorController(
                 )
             )
         }
+    }
+
+    /**
+     * 著者情報の登録
+     * @param request 著者情報
+     * @return 登録結果(201: 登録成功)
+     */
+    @PostMapping()
+    fun register(@RequestBody request: RegisterAuthorRequest): ResponseEntity<RegisterBookResponse> {
+        val result = registerAuthorUseCase.handle(
+            request.name,
+            request.email
+        )
+        return ResponseEntity(
+            RegisterBookResponse(result.value),
+            HttpStatus.CREATED
+        )
     }
 }

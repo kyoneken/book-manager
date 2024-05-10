@@ -69,7 +69,7 @@ class BookController(
             request.authorId
         )
         return ResponseEntity(
-            RegisterBookResponse(result.id.value),
+            RegisterBookResponse(result.value),
             HttpStatus.CREATED
         )
     }
@@ -113,20 +113,38 @@ class BookController(
         }
     }
 
+    /**
+     * 例外処理(NotFoundException)
+     * @param ex 例外 NotFoundException
+     * @return エラーレスポンス(404: Not Found)
+     */
     @ExceptionHandler(NotFoundException::class)
     fun handleNotFoundException(ex: NotFoundException): ResponseEntity<ErrorResponse> {
+        println(ex.message)
         val errorResponse = ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.message)
         return ResponseEntity(errorResponse, HttpStatus.NOT_FOUND)
     }
 
+    /**
+     * 例外処理(IllegalArgumentException)
+     * @param ex 例外 IllegalArgumentException
+     * @return エラーレスポンス(400: Bad Request)
+     */
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ErrorResponse> {
+        println(ex.message)
         val errorResponse = ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.message)
         return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
     }
 
+    /**
+     * 例外処理(Exception)
+     * @param ex 例外 Exception
+     * @return エラーレスポンス(500: Internal Server Error)
+     */
     @ExceptionHandler(Exception::class)
     fun handleException(ex: Exception): ResponseEntity<ErrorResponse> {
+        println(ex.message)
         val errorResponse = ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.message)
         return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }

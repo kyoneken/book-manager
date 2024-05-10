@@ -1,6 +1,14 @@
 package com.example.bookmanager.infrastructure.repository
 
-import com.example.bookmanager.domain.model.*
+import com.example.bookmanager.domain.model.Author
+import com.example.bookmanager.domain.model.AuthorId
+import com.example.bookmanager.domain.model.AuthorName
+import com.example.bookmanager.domain.model.Book
+import com.example.bookmanager.domain.model.BookId
+import com.example.bookmanager.domain.model.BookTitle
+import com.example.bookmanager.domain.model.Email
+import com.example.bookmanager.domain.model.ISBN
+import com.example.bookmanager.domain.model.NewBook
 import com.example.bookmanager.domain.repository.BookRepository
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
@@ -11,7 +19,7 @@ import com.example.bookmanager.generated.jooq.tables.Book as JooqTablesBook
 @Repository
 class BookRepositoryImpl(
     private val dslContext: DSLContext
-): BookRepository {
+) : BookRepository {
 
     override fun findById(id: BookId): Book? {
         val author = JooqTablesAuthor.AUTHOR

@@ -26,13 +26,15 @@ class AuthorController(
     @GetMapping()
     fun getAuthors(): ResponseEntity<List<AuthorResponse>> {
         val authors = listAuthorUseCase.handle()
-        return ResponseEntity.ok(authors.map {
-            AuthorResponse(
-                it.id.value,
-                it.name.toString(),
-                it.email.value
-            )
-        })
+        return ResponseEntity.ok(
+            authors.map {
+                AuthorResponse(
+                    it.id.value,
+                    it.name.toString(),
+                    it.email.value
+                )
+            }
+        )
     }
 
     /**

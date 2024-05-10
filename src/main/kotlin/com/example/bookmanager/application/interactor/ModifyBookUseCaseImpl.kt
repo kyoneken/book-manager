@@ -1,7 +1,10 @@
 package com.example.bookmanager.application.interactor
 
 import com.example.bookmanager.application.usecase.ModifyBookUseCase
-import com.example.bookmanager.domain.model.*
+import com.example.bookmanager.domain.model.AuthorId
+import com.example.bookmanager.domain.model.BookId
+import com.example.bookmanager.domain.model.BookTitle
+import com.example.bookmanager.domain.model.ISBN
 import com.example.bookmanager.domain.repository.BookRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -9,8 +12,8 @@ import java.time.LocalDate
 
 @Service
 class ModifyBookUseCaseImpl(
-    val bookRepository: BookRepository,
-): ModifyBookUseCase {
+    val bookRepository: BookRepository
+) : ModifyBookUseCase {
 
     @Transactional
     override fun handle(id: Long, title: String?, isbn: String?, publishedDate: LocalDate?, authorId: Long?) {
@@ -26,13 +29,15 @@ class ModifyBookUseCaseImpl(
         val updatedIsbn = isbn?.let { ISBN.tryCreate(it) }
         val updatedAuthorId = authorId?.let { AuthorId.tryCreate(it) }
 
-        when (bookRepository.updateById(
-            bookId,
-            updatedTitle,
-            updatedIsbn,
-            publishedDate,
-            updatedAuthorId
-        )){
+        when (
+            bookRepository.updateById(
+                bookId,
+                updatedTitle,
+                updatedIsbn,
+                publishedDate,
+                updatedAuthorId
+            )
+        ) {
             1 -> return
             else -> {
                 val message = "Unexpected update count. Id: $id"

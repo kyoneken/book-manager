@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service
 @Service
 class ListAuthorUseCaseImpl(
     private val authorRepository: AuthorRepository
-): ListAuthorUseCase {
-    override fun handle():  List<Author> {
+) : ListAuthorUseCase {
+    override fun handle(): List<Author> {
         return authorRepository.selectAll()
     }
 }

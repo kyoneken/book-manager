@@ -8,9 +8,9 @@ import com.example.bookmanager.domain.repository.BookRepository
 import org.springframework.stereotype.Service
 
 @Service
-class SearchBookUseCaseImpl (
+class SearchBookUseCaseImpl(
     private val bookRepository: BookRepository
-): SearchBookUsecase {
+) : SearchBookUsecase {
     override fun handle(title: String?, authorId: Long?): List<Book> {
         val bookTitle = title?.let { BookTitle.create(it) }
         val bookAuthorId = authorId?.let { AuthorId.create(it) }

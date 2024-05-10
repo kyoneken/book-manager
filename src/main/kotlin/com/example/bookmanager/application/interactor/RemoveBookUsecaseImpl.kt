@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RemoveBookUsecaseImpl(
-    private val bookRepository: BookRepository,
-): RemoveBookUseCase {
+    private val bookRepository: BookRepository
+) : RemoveBookUseCase {
 
     @Transactional
     override fun handle(id: Long): Result<Unit> {

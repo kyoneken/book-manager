@@ -1,6 +1,11 @@
 package com.example.bookmanager.domain.repository
 
-import com.example.bookmanager.domain.model.*
+import com.example.bookmanager.domain.model.AuthorId
+import com.example.bookmanager.domain.model.Book
+import com.example.bookmanager.domain.model.BookId
+import com.example.bookmanager.domain.model.BookTitle
+import com.example.bookmanager.domain.model.ISBN
+import com.example.bookmanager.domain.model.NewBook
 import java.time.LocalDate
 
 interface BookRepository {

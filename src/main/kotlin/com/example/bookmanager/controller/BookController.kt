@@ -13,7 +13,16 @@ import com.example.bookmanager.controller.response.SearchBookResponse
 import com.example.bookmanager.exception.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * 書籍情報のコントローラ
@@ -24,7 +33,7 @@ class BookController(
     private val searchBookUseCase: SearchBookUsecase,
     private val registerBookUseCase: RegisterBookUseCase,
     private val modifyBookUseCase: ModifyBookUseCase,
-    private val removeBookUseCase: RemoveBookUseCase,
+    private val removeBookUseCase: RemoveBookUseCase
 ) {
 
     /**
@@ -35,8 +44,10 @@ class BookController(
      * @throws NotFoundException 書籍が見つからない場合
      */
     @GetMapping("/search")
-    fun search(@RequestParam("title") title: String?,
-               @RequestParam("authorId") authorId: Long?): ResponseEntity<List<SearchBookResponse>> {
+    fun search(
+        @RequestParam("title") title: String?,
+        @RequestParam("authorId") authorId: Long?
+    ): ResponseEntity<List<SearchBookResponse>> {
         val books = searchBookUseCase.handle(title, authorId)
         return ResponseEntity(
             books.map { SearchBookResponse(it.id.value, it.title.value, it.isbn.value, it.publishedDate, it.author.name.toString()) },
@@ -71,16 +82,14 @@ class BookController(
      */
     @PatchMapping("/{id}")
     fun modify(@PathVariable("id") id: Long, @RequestBody request: ModifyBookRequest): ResponseEntity<ModifyBookResponse> {
-        val result = modifyBookUseCase.handle(
+        modifyBookUseCase.handle(
             id,
             request.title,
             request.isbn,
             request.publishedDate,
             request.authorId
         )
-        return ResponseEntity(ModifyBookResponse("Book ${id} modified successfully."), HttpStatus.OK)
-
-
+        return ResponseEntity(ModifyBookResponse("Book $id modified successfully."), HttpStatus.OK)
     }
 
     /**
@@ -93,12 +102,12 @@ class BookController(
         val result = removeBookUseCase.handle(id)
         return if (result.isSuccess) {
             ResponseEntity(
-                ModifyBookResponse("Book ${id} removed successfully."),
+                ModifyBookResponse("Book $id removed successfully."),
                 HttpStatus.OK
             )
         } else {
             ResponseEntity(
-                ModifyBookResponse("Book ${id} is already removed."),
+                ModifyBookResponse("Book $id is already removed."),
                 HttpStatus.CONFLICT
             )
         }

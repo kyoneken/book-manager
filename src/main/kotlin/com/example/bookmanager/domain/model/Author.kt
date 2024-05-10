@@ -1,7 +1,5 @@
 package com.example.bookmanager.domain.model
 
-import java.time.LocalDate
-
 /**
  * 著者情報
  * @property id ID
@@ -51,7 +49,7 @@ data class AuthorName private constructor(
     /* 姓 */
     val lastName: String,
     /* 名 */
-    val firstName: String,
+    val firstName: String
 ) {
     companion object {
         fun create(fullName: String): AuthorName {

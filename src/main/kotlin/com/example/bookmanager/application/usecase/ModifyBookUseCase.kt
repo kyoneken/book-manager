@@ -1,6 +1,5 @@
 package com.example.bookmanager.application.usecase
 
-import com.example.bookmanager.domain.model.Book
 import java.time.LocalDate
 
 /**

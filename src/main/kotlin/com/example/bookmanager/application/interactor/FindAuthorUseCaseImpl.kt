@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class FindAuthorUseCaseImpl(
     private val authorRepository: AuthorRepository
-): FindAuthorUseCase {
+) : FindAuthorUseCase {
     override fun handle(id: Long): Author? {
         return authorRepository.findById(AuthorId.create(id))
     }

@@ -12,7 +12,7 @@ import com.example.bookmanager.generated.jooq.tables.Author as JooqTablesAuthor
 @Repository
 class AuthorRepositoryImpl(
     private val dslContext: DSLContext
-): AuthorRepository {
+) : AuthorRepository {
     override fun findById(id: AuthorId): Author? {
         val author = JooqTablesAuthor.AUTHOR
         val record = dslContext.select()

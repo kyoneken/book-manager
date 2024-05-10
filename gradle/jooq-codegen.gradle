@@ -1,0 +1,24 @@
+configuration {
+    jdbc {
+        driver = 'org.postgresql.Driver'
+        url = 'jdbc:postgresql://localhost:5432/mybook'
+        user = 'myuser'
+        password = 'secret'
+    }
+    generator {
+        database {
+            name = 'org.jooq.meta.postgres.PostgresDatabase'
+            inputSchema = '[ public ]'
+        }
+        generate {
+            relations = true
+            records = true
+            pojos = true
+            dao = true
+        }
+        target {
+            directory = file('src/main/kotlin')
+            packageName = 'com.example.bookmanager.generated.jooq'
+        }
+    }
+}

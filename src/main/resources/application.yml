@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: book-manager
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mybook
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  jooq:
+    sql-dialect: POSTGRES
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/mybook
+    user: myuser
+    password: secret
+    locations: classpath:db/migration

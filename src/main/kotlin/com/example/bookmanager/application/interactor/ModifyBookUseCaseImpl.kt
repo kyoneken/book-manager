@@ -18,26 +18,24 @@ class ModifyBookUseCaseImpl(
     @Transactional
     override fun handle(id: Long, title: String?, isbn: String?, publishedDate: LocalDate?, authorId: Long?) {
         val bookId = BookId.create(id)
-        val temp = bookRepository.findById(bookId)
-        if (temp == null) {
+        val persistedBook = bookRepository.findById(bookId)
+        if (persistedBook == null) {
             val message = "Book not found: $id"
             println(message)
             throw IllegalArgumentException(message)
         }
 
-        val updatedTitle = title?.let { BookTitle.tryCreate(it) }
-        val updatedIsbn = isbn?.let { ISBN.tryCreate(it) }
-        val updatedAuthorId = authorId?.let { AuthorId.tryCreate(it) }
-
-        when (
-            bookRepository.updateById(
-                bookId,
-                updatedTitle,
-                updatedIsbn,
-                publishedDate,
-                updatedAuthorId
-            )
-        ) {
+        val updatedTitle = title?.let { BookTitle.create(it) }
+        val updatedIsbn = isbn?.let { ISBN.create(it) }
+        val updatedAuthorId = authorId?.let { AuthorId.create(it) }
+        val result = bookRepository.updateById(
+            bookId,
+            updatedTitle,
+            updatedIsbn,
+            publishedDate,
+            updatedAuthorId
+        )
+        when (result) {
             1 -> return
             else -> {
                 val message = "Unexpected update count. Id: $id"

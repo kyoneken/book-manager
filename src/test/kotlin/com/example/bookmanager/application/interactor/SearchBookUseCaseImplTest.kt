@@ -15,7 +15,7 @@ import io.mockk.verify
  * @see SearchBookUseCaseImpl
  * @property bookRepository BookRepository
  */
-class SearchBookUseCaseImplTest: BehaviorSpec({
+class SearchBookUseCaseImplTest : BehaviorSpec({
     given("SearchBookUseCaseImpl") {
         val bookRepository = mockk<BookRepository>()
         val searchBookUseCase = SearchBookUseCaseImpl(bookRepository)

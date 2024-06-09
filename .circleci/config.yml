@@ -1,0 +1,42 @@
+version: 2.1
+
+executors:
+  kotlin-executor:
+    docker:
+      - image: cimg/openjdk:21.0
+    working_directory: ~/repo
+
+jobs:
+  test:
+    executor: kotlin-executor
+    steps:
+      - checkout
+      - run:
+          name: Calculate cache key
+          command: |
+            find . -name 'pom.xml' -o -name 'gradlew*' -o -name '*.gradle*' | \
+                    sort | xargs cat > /tmp/CIRCLECI_CACHE_KEY
+      - restore_cache:
+          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
+      - run:
+          name: Install Dependencies
+          command: ./gradlew dependencies
+      - run:
+          name: Run ktLintCheck
+          command: ./gradlew ktLintCheck
+      - run:
+          name: Run Tests
+          command: ./gradlew test
+      - store_test_results:
+          path: build/test-results
+      - save_cache:
+          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
+          paths:
+            - ~/.gradle/caches
+      - store_artifacts:
+          path: build/reports
+
+workflows:
+  build-and-test:
+    jobs:
+      - test

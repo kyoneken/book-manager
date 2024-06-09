@@ -1,21 +1,32 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:java:.,tool:gradle:
 version: 2.1
-jobs:
-  test-java:
+
+executors:
+  kotlin-executor:
     docker:
-      - image: cimg/openjdk:17.0
+      - image: cimg/openjdk:21.0
+    working_directory: ~/repo
+
+jobs:
+  test:
+    executor: kotlin-executor
     steps:
       - checkout
       - run:
           name: Calculate cache key
-          command: |-
+          command: |
             find . -name 'pom.xml' -o -name 'gradlew*' -o -name '*.gradle*' | \
                     sort | xargs cat > /tmp/CIRCLECI_CACHE_KEY
       - restore_cache:
           key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
       - run:
-          command: ./gradlew check
+          name: Install Dependencies
+          command: ./gradlew dependencies
+      - run:
+          name: Run ktLintCheck
+          command: ./gradlew ktLintCheck
+      - run:
+          name: Run Tests
+          command: ./gradlew test
       - store_test_results:
           path: build/test-results
       - save_cache:
@@ -24,19 +35,8 @@ jobs:
             - ~/.gradle/caches
       - store_artifacts:
           path: build/reports
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+
 workflows:
   build-and-test:
     jobs:
-      - test-java
-    # - deploy:
-    #     requires:
-    #       - test-java
+      - test

@@ -8,5 +8,5 @@ interface AuthorRepository {
     fun findById(id: AuthorId): Author?
     fun selectAll(): List<Author>
 
-    fun insert(newBook: NewAuthor): AuthorId
+    fun insert(newAuthor: NewAuthor): AuthorId
 }
